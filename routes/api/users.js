@@ -3,10 +3,13 @@ const router = express.Router();
 const { wrapAsync } = require('../../util');
 const AppError = require('../../AppError');
 
-router.get(
-  '/',
+const User = require('../../models/User.js');
+
+// register an user
+router.post(
+  '/register',
   wrapAsync(async (req, res) => {
-    res.send('hello world');
+    const { email, password } = req.body;
   })
 );
 
