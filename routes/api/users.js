@@ -1,5 +1,5 @@
 const express = require('express');
-const { wrapAsync, genPassword, validPassword } = require('../../util');
+const { wrapAsync } = require('../../util');
 
 const { issueJWT, authMiddleware } = require('../../jwtUtils');
 
@@ -19,14 +19,9 @@ router.post(
     const foundUser = await User.findOne({ email });
     if (foundUser) throw new AppError(400, 'User already exists.');
 
-    const hash = await genPassword(password);
-    const newUser = new User({
-      email,
-      password: hash,
-    });
-
+    const newUser = new User({ email, password });
     const savedUser = await newUser.save();
-    console.log(savedUser);
+
     const jwt = issueJWT(savedUser);
     res.json({ user: savedUser, token: jwt });
   })
@@ -43,7 +38,7 @@ router.post(
     const foundUser = await User.findOne({ email });
     if (!foundUser) throw new AppError(400, 'User does not exist.');
 
-    const isValid = await validPassword(password, foundUser.password);
+    const isValid = await foundUser.comparePassword(password);
     if (!isValid) throw new AppError(401, 'Incorrect Password.');
 
     const jwt = issueJWT(foundUser);
