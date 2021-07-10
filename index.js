@@ -2,13 +2,12 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const passport = require('passport');
 
 const app = express();
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/test';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/jwt-test';
 
 mongoose
   .connect(MONGODB_URI, {
@@ -22,9 +21,6 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-require('./passportConfig')(passport);
-
-app.use(passport.initialize());
 
 app.use(express.json());
 app.use(morgan('tiny'));
