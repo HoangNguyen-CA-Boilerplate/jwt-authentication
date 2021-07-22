@@ -7,10 +7,11 @@ const app = express();
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/jwt-test';
+const mongoString =
+  process.env.MONGODB_STRING || 'mongodb://localhost/jwt-test';
 
 mongoose
-  .connect(MONGODB_URI, {
+  .connect(mongoString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -38,7 +39,6 @@ if (process.env.NODE_ENV === 'production') {
 
 //custom error handler
 app.use((err, req, res, next) => {
-  console.log(err.message);
   const { status = 500, message = 'Something Went Wrong!' } = err;
   res.status(status).json({ status, error: message });
 });

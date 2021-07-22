@@ -2,6 +2,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const validator = require('validator');
 
 const PUB_KEY = Buffer.from(process.env.PUB_KEY, 'base64').toString('utf-8');
+
 const AppError = require('../AppError.js');
 const { wrapAsync } = require('../util');
 
@@ -19,6 +20,7 @@ const isAuth = wrapAsync(async (req, res, next) => {
 
   const tokenPayload = jsonwebtoken.verify(tokenParts[1], PUB_KEY, {
     algorithms: ['RS256'],
+    ignoreExpiration: false,
   });
 
   const userId = tokenPayload.sub;
