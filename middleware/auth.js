@@ -8,7 +8,7 @@ const { wrapAsync } = require('../util');
 
 const isAuth = wrapAsync(async (req, res, next) => {
   if (!req.header('authorization'))
-    throw new AppError(401, 'No token provided.');
+    throw new AppError(401, 'no token provided');
 
   const tokenParts = req.headers.authorization.split(' ');
   if (
@@ -16,11 +16,10 @@ const isAuth = wrapAsync(async (req, res, next) => {
     !tokenParts[1] ||
     !validator.isJWT(tokenParts[1])
   )
-    throw new AppError(401, 'Invalid token format.');
+    throw new AppError(401, 'invalid token format');
 
   const tokenPayload = jsonwebtoken.verify(tokenParts[1], PUB_KEY, {
     algorithms: ['RS256'],
-    ignoreExpiration: false,
   });
 
   const userId = tokenPayload.sub;
